@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sast.woc.mapper.AdminMapper">
+
+
+
+    <select id="selectUser" parameterType="String" resultType="com.sast.woc.entity.User">
+        SELECT *  FROM user WHERE user_name =#{userName};
+    </select>
+    <select id="selectUserName" parameterType="String" resultType="Integer">
+        SELECT id FROM user WHERE user_name=#{userName};
+    </select>
+
+
+    <delete id="deleteUserByName" parameterType="String">
+        DELETE FROM user WHERE user_name=#{userName};
+    </delete>
+
+    <select id="selectUserByPage" resultMap="userMap">
+        SELECT *  FROM user LIMIT #{pageNum},#{pageSize};
+    </select>
+    <resultMap id="userMap" type="com.sast.woc.entity.User">
+        <id property="id" column="id"/>
+        <result property="userName" column="user_name"/>
+        <result property="password" column="password"/>
+        <result property="email" column="email"/>
+        <result property="role" column="role"/>
+    </resultMap>
+
+
+</mapper>

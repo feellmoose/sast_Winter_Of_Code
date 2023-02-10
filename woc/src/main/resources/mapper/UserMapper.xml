@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sast.woc.mapper.UserMapper">
+
+    <select id="selectPwd" parameterType="String" resultType="String">
+        SELECT password FROM user WHERE user_name=#{userName};
+    </select>
+
+
+    <select id="selectByName" parameterType="String" resultType="com.sast.woc.entity.User">
+        SELECT user_name,email FROM user WHERE user_name=#{userName};
+    </select>
+
+
+    <select id="selectIdByName" parameterType="String" resultType="Integer">
+        SELECT id FROM user WHERE user_name=#{userName};
+    </select>
+    <insert id="addUser" useGeneratedKeys="true" keyProperty="id" parameterType="com.sast.woc.entity.User">
+        INSERT INTO user(id , user_name, password, email,role) VALUES (#{user.id},#{user.userName},#{user.password},#{user.email},0)
+    </insert>
+
+
+    <update id="editUserByName" parameterType="com.sast.woc.entity.User">
+        UPDATE user
+        SET password=#{user.password},email=#{user.email}
+        WHERE user_name=#{user.userName}
+    </update>
+
+    <select id="selectRoleByName" parameterType="String" resultType="Integer">
+        SELECT role FROM user WHERE user_name=#{userName};
+    </select>
+
+    <select id="selectAllByName" parameterType="String" resultType="com.sast.woc.entity.User">
+        SELECT id,user_name,email,role FROM user WHERE user_name=#{userName};
+    </select>
+
+
+</mapper>
