@@ -8,6 +8,9 @@ import com.sast.woc.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -34,8 +37,12 @@ public class UserController {
      * @return userName+password
      */
     @GetMapping("/info")
-    public User getInfo(@RequestHeader("Token") String token){
-        return userService.getInfo(TokenUtil.tokenVerify(token).getClaim("userName").asString());
+    public Map getInfo(@RequestHeader("Token") String token){
+        User user=userService.getInfo(TokenUtil.tokenVerify(token).getClaim("userName").asString());
+        HashMap<String,Object> map =new HashMap();
+        map.put("userName",user.getUserName());
+        map.put("email",user.getEmail());
+        return map;
     }
 
     /**

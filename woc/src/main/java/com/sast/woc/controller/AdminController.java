@@ -1,5 +1,6 @@
 package com.sast.woc.controller;
 
+import com.sast.woc.Utils.TokenUtil;
 import com.sast.woc.entity.User;
 import com.sast.woc.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.SQLOutput;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author xun
@@ -42,11 +46,15 @@ public class AdminController {
      * @return
      */
     @GetMapping("/find_user_info")
-    public User findUser(String userName) {
+    public Map findUser(String userName) {
         User user= adminService.findUser(userName);
-        user.setPassword(null);
+        HashMap map=new HashMap();
+        map.put("userName",user.getUserName());
+        map.put("email",user.getEmail());
+        map.put("id",user.getId());
+
         //只返回部分信息
-        return user;
+        return map;
     }
 
 
@@ -57,8 +65,18 @@ public class AdminController {
      * @return
      */
     @GetMapping("/show_all")
-    public List<User> showAllUser(Integer pageNum, Integer pageSize){
-        return adminService.findAllUser(pageNum,pageSize);
+    public List<Map> showAllUser(Integer pageNum, Integer pageSize){
+        ArrayList<Map> maps=new ArrayList<>();
+        List<User> users=adminService.findAllUser(pageNum,pageSize);
+        for (User user:users
+             ) {
+            HashMap map=new HashMap();
+            map.put("userName",user.getUserName());
+            map.put("email",user.getEmail());
+            map.put("id",user.getId());
+            maps.add(map);
+        }
+        return maps;
 
     }
 

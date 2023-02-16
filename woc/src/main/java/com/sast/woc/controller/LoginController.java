@@ -5,10 +5,14 @@ import com.sast.woc.ResultData.ReturnCode;
 import com.sast.woc.Utils.TokenUtil;
 import com.sast.woc.entity.User;
 import com.sast.woc.service.UserService;
+import org.apache.el.parser.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class LoginController {
@@ -25,7 +29,7 @@ public class LoginController {
      * @return user
      */
     @PostMapping("/login")
-    public User login(@RequestParam(defaultValue = "") String userName, @RequestParam(defaultValue = "") String password) {
+    public Map login(@RequestParam(defaultValue = "") String userName, @RequestParam(defaultValue = "") String password) {
         //密码
         if(!userService.login(userName,password)) {
             throw new MyException(ReturnCode.valueOf("USERNAME_OR_PASSWORD_ERROR"));
@@ -33,8 +37,14 @@ public class LoginController {
         //计算token
         //返回实例
         User user= userService.getAllInfo(userName);
-        user.setToken(TokenUtil.getToken(userName,user.getRole()));
-        return user;
+        HashMap<String,Object> map=new HashMap();
+        Integer role=userService.getRole(userName);
+        map.put("token",TokenUtil.getToken(userName,role));
+        map.put("userName",user.getUserName());
+        map.put("email",user.getEmail());
+        map.put("role",role);
+        map.put("id",user.getId());
+        return map;
 
 
     }
